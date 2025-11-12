@@ -83,7 +83,7 @@ customer_nan_errors.to_csv('03_Library_SystemCustomers_ERRORS.csv', index= False
 
 #--- Load cleaned data to SQL Server
 server = 'localhost' #sql server local
-database = 'LibraryDB' #name of cleaned data base
+database = 'Library DB' #name of cleaned data base
 
 #windows authentication
 conn_str = f"mssql+pyodbc://@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server;Trusted_Connection=yes"
