@@ -2,6 +2,8 @@
 import pandas as pd #main lib for hadnling and cleaning csv/data STEP ONE
 import os #helps python work with file paths
 from datetime import datetime 
+from sqlalchemy import create_engine
+import pyodbc
 
 
 #define data folder 
@@ -81,5 +83,20 @@ clean_customers_df = customers_df.drop(customer_nan_errors.index)
 clean_customers_df.to_csv('03_Library_SystemCustomers_CLEAN.csv', index=False)
 customer_nan_errors.to_csv('03_Library_SystemCustomers_ERRORS.csv', index= False)
 
-print("Data Cleaning Complete")
+#--- Load cleaned data to SQL Server
+server = 'localhost' #sql server local
+database = 'LibraryDB' #name of cleaned data base
 
+#windows authentication
+connection_string = f"mssql+pyodbc://@{server}/{database}?trusted_connection=yes&driver=OBDC+Driver+17+for+SQL+Server"
+
+#create the SQLalchemy engine
+engine = create_engine(connection_string)
+
+#Write the DataFrame to SQL Server
+clean_books_df.to_sql('clean_books', con=engine, if_exists='replace',index=False)
+error_rows.to_sql('error_rows', con=engine, if_exists= 'replace', index=False)
+clean_customers_df.to_sql('clean_customers', con=engine, if_exists='replace',index=False)
+customer_nan_errors.to_sql('customers_nan_errors', con-engine, if_exists='replace', index=False)
+
+print("Data Cleaning Complete")
