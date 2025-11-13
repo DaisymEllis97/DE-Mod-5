@@ -2,13 +2,13 @@
 import pandas as pd #main lib for hadnling and cleaning csv/data STEP ONE
 import os #helps python work with file paths
 from datetime import datetime 
-from sqlalchemy import create_engine
+
 
 #define data folder 
-data_folder = 'data'
+data_folder = 'Data'
 
 #Load the books csv 
-books_file = os.path.join(data_folder, '03_library systembook.csv') #joins foler and file name
+books_file = os.path.join(data_folder, '03_Library Systembook.csv') #joins foler and file name
 books_df = pd.read_csv(books_file) #loads csv into a dataframe
 
 #Remove duplicates
@@ -81,16 +81,5 @@ clean_customers_df = customers_df.drop(customer_nan_errors.index)
 clean_customers_df.to_csv('03_Library_SystemCustomers_CLEAN.csv', index=False)
 customer_nan_errors.to_csv('03_Library_SystemCustomers_ERRORS.csv', index= False)
 
-#--- Load cleaned data to SQL Server
-server = 'localhost' #sql server local
-database = 'Library DB' #name of cleaned data base
-
-#windows authentication
-conn_str = f"mssql+pyodbc://@{server}/{database}?driver=ODBC+Driver+17+for+SQL+Server;Trusted_Connection=yes"
-
-engine = create_engine(conn_str)
-
-#write dataframes to SQL server
-clean_books_df.to_sql('Books', con=engine, if_exists='replace', index=False)
-clean_customers_df.to.sql('Customers', con=engine, if_exists='replace', index=False)
+print("Data Cleaning Complete")
 
